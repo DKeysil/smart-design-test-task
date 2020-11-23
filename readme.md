@@ -15,9 +15,9 @@ python __main__.py
 ## Тесткейсы
 Для создания товаров:
 ```sh
-curl -d title=Phone -d description=Amazing -d display=6.5 -X POST http://localhost:8080/api/create_item
-curl -d title='Alternative Phone' -d description=bad -d display=6.9 -X POST http://localhost:8080/api/create_item
-curl -d _id=0 -d title='One more Phone' -d description='Really big' -d display=10 -d headphones=false -X POST http://localhost:8080/api/create_item
+curl --header "Content-Type: application/json" --request POST --data '{"title": "Alternative Phone", "description": "bad", "display": 6.9}' http://localhost:8080/api/create_item
+curl --header "Content-Type: application/json" --request POST --data '{"title": "Phone", "description": "Amazing", "display": 5}' http://localhost:8080/api/create_item
+curl --header "Content-Type: application/json" --request POST --data '{"_id": 0, "title": "One more Phone", "description": "Really big", "display": 10}' http://localhost:8080/api/create_item
 ```
 Ответ должен быть:
 ```json
@@ -30,12 +30,12 @@ curl -X POST http://localhost:8080/api/get_items
 ```
 Ответ должен быть (_id будет отличаться):
 ```json
-{"items": [{"_id": {"$oid": "5fb3cdfb7781d5d6860577ba"}, "title": "Phone", "description": "Amazing", "display": "6.5"}, {"_id": {"$oid": "5fb3cf643594fa394308e466"}, "title": "Alternative Phone", "description": "bad", "display": "6.9"}, {"_id": "0", "title": "One more Phone", "description": "Really big", "display": "10", "headphones": "false"}]}
+{"items": [{"_id": {"$oid": "5fbb91282fa7c5279d2eecf8"}, "title": "Alternative Phone", "description": "bad", "display": 6.9}, {"_id": {"$oid": "5fbb91d04be3ee83c1b30fa9"}, "title": "Phone", "description": "Amazing", "display": 5}, {"_id": 0, "title": "One more Phone", "description": "Really big", "display": 10}]}
 ```
 
 Для получения списка товаров (сортировка по title):
 ```sh
-curl -d sort=title -X POST http://localhost:8080/api/get_items
+curl --header "Content-Type: application/json" --request POST --data '{"sort": "title"}' http://localhost:8080/api/get_items
 ```
 Ответ должен быть:
 ```json
@@ -44,18 +44,18 @@ curl -d sort=title -X POST http://localhost:8080/api/get_items
 
 Для получения товара по _id:
 ```sh
-curl -d _id=0 -X POST http://localhost:8080/api/get_item
+curl --header "Content-Type: application/json" --request POST --data '{"_id": 0}' http://localhost:8080/api/get_item
 ```
 Ответ должен быть:
 ```json
-{"item": {"_id": "0", "title": "One more Phone", "description": "Really big", "display": "10", "headphones": "false"}}
+{"item": {"_id": 0, "title": "One more Phone", "description": "Really big", "display": 10}}
 ```
 
 Или по ObjecId:
 ```sh
-curl -d _id='{"$oid": "5fb3cf643594fa394308e466"}' -X POST http://localhost:8080/api/get_item
+curl --header "Content-Type: application/json" --request POST --data '{"_id": "5fbb91282fa7c5279d2eecf8"}' http://localhost:8080/api/get_item
 ```
 Ответ должен быть:
 ```json
-{"item": {"_id": {"$oid": "5fb3cf643594fa394308e466"}, "title": "Alternative Phone", "description": "bad", "display": "6.9"}}
+{"item": {"_id": {"$oid": "5fbb91282fa7c5279d2eecf8"}, "title": "Alternative Phone", "description": "bad", "display": 6.9}}
 ```
