@@ -65,6 +65,34 @@ async def get_item(request: web.Request):
         return web.json_response({'error': '_id is not specified'}, status=422)
 
 
+@routes.post('/api/get_items_titles')
+async def get_items_titles(request: web.Request):
+    try:
+        params = await request.json()
+    except json.decoder.JSONDecodeError:
+        params = {}
+    logger.info(params)
+
+    db = SingletonClient.get_data_base()
+    try:
+        key = list(params.keys())[0]
+        cursor = db.items.find({
+            key: params.get(key)
+        })
+    except IndexError:
+        cursor = db.items.find({})
+
+    items_list = await cursor.to_list(length=await db.items.count_documents({}))
+    logger.info(items_list)
+    if not items_list:
+        return web.json_response({'error': 'items not found'}, status=404)
+
+    items_list = [item['title'] for item in items_list]
+
+    jsn = json_util.dumps({'titles': items_list})
+    return web.Response(text=jsn, headers={'Content-Type': 'application / json'}, status=200)
+
+
 if __name__ == '__main__':
     app = web.Application()
     app.add_routes(routes)

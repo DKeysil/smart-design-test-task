@@ -16,7 +16,7 @@ python __main__.py
 Для создания товаров:
 ```sh
 curl --header "Content-Type: application/json" --request POST --data '{"title": "Alternative Phone", "description": "bad", "display": 6.9}' http://localhost:8080/api/create_item
-curl --header "Content-Type: application/json" --request POST --data '{"title": "Phone", "description": "Amazing", "display": 5}' http://localhost:8080/api/create_item
+curl --header "Content-Type: application/json" --request POST --data '{"title": "Phone", "description": "bad", "display": 5}' http://localhost:8080/api/create_item
 curl --header "Content-Type: application/json" --request POST --data '{"_id": 0, "title": "One more Phone", "description": "Really big", "display": 10}' http://localhost:8080/api/create_item
 ```
 Ответ должен быть:
@@ -30,7 +30,7 @@ curl -X POST http://localhost:8080/api/get_items
 ```
 Ответ должен быть (_id будет отличаться):
 ```json
-{"items": [{"_id": {"$oid": "5fbb91282fa7c5279d2eecf8"}, "title": "Alternative Phone", "description": "bad", "display": 6.9}, {"_id": {"$oid": "5fbb91d04be3ee83c1b30fa9"}, "title": "Phone", "description": "Amazing", "display": 5}, {"_id": 0, "title": "One more Phone", "description": "Really big", "display": 10}]}
+{"items": [{"_id": {"$oid": "5fbcc2b4d6c1afa7c348aa35"}, "title": "Alternative Phone", "description": "bad", "display": 6.9}, {"_id": {"$oid": "5fbcc2b7d6c1afa7c348aa36"}, "title": "Phone", "description": "bad", "display": 5}, {"_id": 0, "title": "One more Phone", "description": "Really big", "display": 10}]}
 ```
 
 Для получения списка товаров (сортировка по title):
@@ -39,7 +39,7 @@ curl --header "Content-Type: application/json" --request POST --data '{"sort": "
 ```
 Ответ должен быть:
 ```json
-{"items": [{"_id": {"$oid": "5fb3cf643594fa394308e466"}, "title": "Alternative Phone", "description": "bad", "display": "6.9"}, {"_id": "0", "title": "One more Phone", "description": "Really big", "display": "10", "headphones": "false"}, {"_id": {"$oid": "5fb3cdfb7781d5d6860577ba"}, "title": "Phone", "description": "Amazing", "display": "6.5"}]}
+{"items": [{"_id": {"$oid": "5fbcc2b4d6c1afa7c348aa35"}, "title": "Alternative Phone", "description": "bad", "display": 6.9}, {"_id": 0, "title": "One more Phone", "description": "Really big", "display": 10}, {"_id": {"$oid": "5fbcc2b7d6c1afa7c348aa36"}, "title": "Phone", "description": "bad", "display": 5}]}
 ```
 
 Для получения товара по _id:
@@ -57,5 +57,24 @@ curl --header "Content-Type: application/json" --request POST --data '{"_id": "5
 ```
 Ответ должен быть:
 ```json
-{"item": {"_id": {"$oid": "5fbb91282fa7c5279d2eecf8"}, "title": "Alternative Phone", "description": "bad", "display": 6.9}}
+{"item": {"_id": {"$oid": "5fbcc2b4d6c1afa7c348aa35"}, "title": "Alternative Phone", "description": "bad", "display": 6.9}}
+```
+
+
+Получить список названий товаров
+```sh
+curl --header "Content-Type: application/json" --request POST http://localhost:8080/api/get_items_titles
+```
+Ответ должен быть:
+```json
+{"titles": ["Alternative Phone", "Phone", "One more Phone"]}
+```
+
+Получить список названий товаров (Фильтрация по полю description)
+```sh
+curl --header "Content-Type: application/json" --request POST --data '{"description": "bad"}' http://localhost:8080/api/get_items_titles
+```
+Ответ должен быть:
+```json
+{"titles": ["Alternative Phone", "Phone"]}
 ```
